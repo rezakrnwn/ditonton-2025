@@ -109,6 +109,72 @@ void main() {
   );
 
   blocTest<TvSeriesDetailBloc, TVSeriesDetailState>(
+    "should emit TVSeriesDetailLoadedState with tvSeriesRecommendationsErrorMessage when data tv series recommendation is gotten unsuccessfully",
+    build: () {
+      when(
+        mockGetTVSeriesDetail.execute(tId),
+      ).thenAnswer((_) async => Right(testTVSeriesDetail));
+      when(
+        mockGetWatchListStatusTVSeries.execute(tId),
+      ).thenAnswer((_) async => true);
+      when(
+        mockGetTVSeriesRecommendations.execute(tId),
+      ).thenAnswer((_) async => Left(ServerFailure("Failed")));
+      return bloc;
+    },
+    act: (bloc) => bloc.add(LoadTVSeriesDetailEvent(id: tId)),
+    expect:
+        () => [
+          TVSeriesDetailLoadedState(tvSeriesDetail: testTVSeriesDetail),
+          TVSeriesDetailLoadedState(
+            tvSeriesDetail: testTVSeriesDetail,
+            isAddedToWatchlist: true,
+          ),
+          TVSeriesDetailLoadedState(
+            tvSeriesDetail: testTVSeriesDetail,
+            isAddedToWatchlist: true,
+            tvSeriesRecommendationsErrorMessage: "Failed",
+          ),
+        ],
+    verify: (bloc) {
+      verify(mockGetTVSeriesDetail.execute(tId));
+      verify(mockGetWatchListStatusTVSeries.execute(tId));
+      verify(mockGetTVSeriesRecommendations.execute(tId));
+    },
+  );
+
+  blocTest<TvSeriesDetailBloc, TVSeriesDetailState>(
+    "should emit TVSeriesDetailLoadedState with isAddedToWatchlist = false when detail tv series is not listed on wishlist",
+    build: () {
+      when(
+        mockGetTVSeriesDetail.execute(tId),
+      ).thenAnswer((_) async => Right(testTVSeriesDetail));
+      when(
+        mockGetWatchListStatusTVSeries.execute(tId),
+      ).thenAnswer((_) async => false);
+      when(
+        mockGetTVSeriesRecommendations.execute(tId),
+      ).thenAnswer((_) async => Right([tvSeries]));
+      return bloc;
+    },
+    act: (bloc) => bloc.add(LoadTVSeriesDetailEvent(id: tId)),
+    expect:
+        () => [
+          TVSeriesDetailLoadedState(tvSeriesDetail: testTVSeriesDetail),
+          TVSeriesDetailLoadedState(
+            tvSeriesDetail: testTVSeriesDetail,
+            isAddedToWatchlist: false,
+            tvSeriesRecommendations: [tvSeries],
+          ),
+        ],
+    verify: (bloc) {
+      verify(mockGetTVSeriesDetail.execute(tId));
+      verify(mockGetWatchListStatusTVSeries.execute(tId));
+      verify(mockGetTVSeriesRecommendations.execute(tId));
+    },
+  );
+
+  blocTest<TvSeriesDetailBloc, TVSeriesDetailState>(
     "should emit TVSeriesDetailLoadedState when data is added to wishlist",
     build: () {
       when(
@@ -134,6 +200,31 @@ void main() {
   );
 
   blocTest<TvSeriesDetailBloc, TVSeriesDetailState>(
+    "should emit TVSeriesDetailLoadedState with watchlistErrorMessage when add data to wishlist is unsuccessfully",
+    build: () {
+      when(
+        mockSaveWatchlist.execute(testTVSeriesDetail),
+      ).thenAnswer((_) async => Left(DatabaseFailure("Failed")));
+      bloc.emit(TVSeriesDetailLoadedState(isAddedToWatchlist: false));
+      return bloc;
+    },
+    act:
+        (bloc) => bloc.add(
+          AddTVSeriesWatchlistEvent(tvSeriesDetail: testTVSeriesDetail),
+        ),
+    expect:
+        () => [
+          TVSeriesDetailLoadedState(
+            isAddedToWatchlist: false,
+            watchlistErrorMessage: "Failed",
+          ),
+        ],
+    verify: (bloc) {
+      verify(mockSaveWatchlist.execute(testTVSeriesDetail));
+    },
+  );
+
+  blocTest<TvSeriesDetailBloc, TVSeriesDetailState>(
     "should emit TVSeriesDetailLoadedState when data is removed from wishlist",
     build: () {
       when(
@@ -151,6 +242,31 @@ void main() {
           TVSeriesDetailLoadedState(
             isAddedToWatchlist: false,
             watchlistSuccessMessage: "Removed from Watchlist",
+          ),
+        ],
+    verify: (bloc) {
+      verify(mockRemoveWatchlist.execute(testTVSeriesDetail));
+    },
+  );
+
+  blocTest<TvSeriesDetailBloc, TVSeriesDetailState>(
+    "should emit TVSeriesDetailLoadedState with watchlistErrorMessage when remove data from wishlist is unsuccessfully",
+    build: () {
+      when(
+        mockRemoveWatchlist.execute(testTVSeriesDetail),
+      ).thenAnswer((_) async => Left(DatabaseFailure("Failed")));
+      bloc.emit(TVSeriesDetailLoadedState(isAddedToWatchlist: true));
+      return bloc;
+    },
+    act:
+        (bloc) => bloc.add(
+          RemoveTVSeriesWatchlistEvent(tvSeriesDetail: testTVSeriesDetail),
+        ),
+    expect:
+        () => [
+          TVSeriesDetailLoadedState(
+            isAddedToWatchlist: true,
+            watchlistErrorMessage: "Failed",
           ),
         ],
     verify: (bloc) {

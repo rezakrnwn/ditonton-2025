@@ -39,6 +39,24 @@ void main() {
         verify(mockSearchTVSeries.execute(keyword));
       });
 
+    blocTest<SearchTVSeriesBloc, SearchTVSeriesState>(
+      "should emit [SearchTVSeriesLoadingState, SearchResultTVSeriesLoadedState] with empty result when data is gotten successfully",
+      build: () {
+        when(mockSearchTVSeries.execute(keyword))
+            .thenAnswer((_) async => Right([]));
+        return bloc;
+      },
+      act: (bloc) => bloc.add(LoadSearchResultTVSeriesEvent(keyword: keyword)),
+      expect: () => [
+            SearchTVSeriesLoadingState(),
+            SearchResultTVSeriesLoadedState(
+              tvSeries: []
+            ),
+          ],
+      verify: (bloc) {
+        verify(mockSearchTVSeries.execute(keyword));
+      });
+
   blocTest<SearchTVSeriesBloc, SearchTVSeriesState>(
       "should emit [SearchTVSeriesLoadingState, LoadSearchTVSeriesFailureState] when get data is unsuccessful",
       build: () {

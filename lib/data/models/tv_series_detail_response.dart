@@ -36,65 +36,70 @@ class TVSeriesDetailResponse extends Equatable {
   final int? voteCount;
 
   TVSeriesDetailResponse({
-    required this.backdropPath,
-    required this.createdBy,
-    required this.episodeRunTime,
-    required this.firstAirDate,
-    required this.genres,
-    required this.homepage,
+    this.backdropPath,
+    this.createdBy,
+    this.episodeRunTime,
+    this.firstAirDate,
+    this.genres = const [],
+    this.homepage,
     required this.id,
-    required this.inProduction,
-    required this.languages,
-    required this.lastAirDate,
-    required this.lastEpisodeToAir,
-    required this.name,
-    required this.nextEpisodeToAir,
-    required this.networks,
-    required this.numberOfEpisodes,
-    required this.numberOfSeasons,
-    required this.originCountry,
-    required this.originalLanguage,
-    required this.originalName,
-    required this.overview,
-    required this.popularity,
-    required this.posterPath,
-    required this.productionCompanies,
-    required this.productionCountries,
-    required this.seasons,
-    required this.spokenLanguages,
-    required this.status,
-    required this.tagline,
-    required this.type,
-    required this.voteAverage,
-    required this.voteCount,
+    this.inProduction,
+    this.languages,
+    this.lastAirDate,
+    this.lastEpisodeToAir,
+    this.name,
+    this.nextEpisodeToAir,
+    this.networks,
+    this.numberOfEpisodes,
+    this.numberOfSeasons,
+    this.originCountry,
+    this.originalLanguage,
+    this.originalName,
+    this.overview,
+    this.popularity,
+    this.posterPath,
+    this.productionCompanies,
+    this.productionCountries,
+    this.seasons,
+    this.spokenLanguages,
+    this.status,
+    this.tagline,
+    this.type,
+    this.voteAverage,
+    this.voteCount,
   });
 
   factory TVSeriesDetailResponse.fromJson(Map<String, dynamic> json) =>
       TVSeriesDetailResponse(
         id: json['id'],
         genres: List<GenreModel>.from(
-            json["genres"].map((x) => GenreModel.fromJson(x))),
+          json["genres"].map((x) => GenreModel.fromJson(x)),
+        ),
         voteCount: json['vote_count'],
         voteAverage: json['vote_average'],
         posterPath: json['poster_path'],
         popularity: json['popularity'],
         overview: json['overview'],
-        originCountry: json['origin_country'] != null
-            ? json['origin_country'].cast<String>()
-            : [],
+        originCountry:
+            json['origin_country'] != null
+                ? json['origin_country'].cast<String>()
+                : [],
         originalName: json['original_name'],
         originalLanguage: json['original_language'],
         firstAirDate: json['first_air_date'],
         backdropPath: json['backdrop_path'],
         name: json['name'],
         status: json['status'],
-        createdBy: json['created_by'] != null
-            ? List<CreatedBy>.from(
-                json['created_by'].map((v) => CreatedBy.fromJson(v)))
-            : [],
-        episodeRunTime: json['episode_run_time'] != null
-            ? json['episode_run_time'].cast<int>()
-            : [],
+        createdBy:
+            json['created_by'] != null
+                ? List<CreatedBy>.from(
+                  json['created_by'].map((v) => CreatedBy.fromJson(v)),
+                )
+                : [],
+        episodeRunTime:
+            json['episode_run_time'] != null
+                ? json['episode_run_time'].cast<int>()
+                : [],
         type: json['type'],
         tagline: json['tagline'],
         homepage: json['homepage'],
@@ -102,34 +107,52 @@ class TVSeriesDetailResponse extends Equatable {
         languages:
             json['languages'] != null ? json['languages'].cast<String>() : [],
         lastAirDate: json['last_air_date'],
-        lastEpisodeToAir: json['last_episode_to_air'] != null
-            ? LastEpisodeToAir.fromJson(json['last_episode_to_air'])
-            : null,
-        networks: json['networks'] != null
-            ? List<Networks>.from(
-                json['networks'].map((v) => Networks.fromJson(v)))
-            : [],
-        nextEpisodeToAir: json['next_episode_to_air'] != null
-            ? NextEpisodeToAir.fromJson(json['next_episode_to_air'])
-            : null,
+        lastEpisodeToAir:
+            json['last_episode_to_air'] != null
+                ? LastEpisodeToAir.fromJson(json['last_episode_to_air'])
+                : null,
+        networks:
+            json['networks'] != null
+                ? List<Networks>.from(
+                  json['networks'].map((v) => Networks.fromJson(v)),
+                )
+                : [],
+        nextEpisodeToAir:
+            json['next_episode_to_air'] != null
+                ? NextEpisodeToAir.fromJson(json['next_episode_to_air'])
+                : null,
         numberOfEpisodes: json['number_of_episodes'],
         numberOfSeasons: json['number_of_seasons'],
-        productionCompanies: json['production_companies'] != null
-            ? List<ProductionCompanies>.from(json['production_companies']
-                .map((v) => ProductionCompanies.fromJson(v)))
-            : [],
-        productionCountries: json['production_countries'] != null
-            ? List<ProductionCountries>.from(json['production_countries']
-                .map((v) => ProductionCountries.fromJson(v)))
-            : [],
-        seasons: json['seasons'] != null
-            ? List<Seasons>.from(
-                json['seasons'].map((v) => Seasons.fromJson(v)))
-            : [],
-        spokenLanguages: json['spoken_languages'] != null
-            ? List<SpokenLanguages>.from(json['spoken_languages']
-                .map((v) => SpokenLanguages.fromJson(v)))
-            : [],
+        productionCompanies:
+            json['production_companies'] != null
+                ? List<ProductionCompanies>.from(
+                  json['production_companies'].map(
+                    (v) => ProductionCompanies.fromJson(v),
+                  ),
+                )
+                : [],
+        productionCountries:
+            json['production_countries'] != null
+                ? List<ProductionCountries>.from(
+                  json['production_countries'].map(
+                    (v) => ProductionCountries.fromJson(v),
+                  ),
+                )
+                : [],
+        seasons:
+            json['seasons'] != null
+                ? List<Seasons>.from(
+                  json['seasons'].map((v) => Seasons.fromJson(v)),
+                )
+                : [],
+        spokenLanguages:
+            json['spoken_languages'] != null
+                ? List<SpokenLanguages>.from(
+                  json['spoken_languages'].map(
+                    (v) => SpokenLanguages.fromJson(v),
+                  ),
+                )
+                : [],
       );
 
   Map<String, dynamic> toJson() {
@@ -141,7 +164,7 @@ class TVSeriesDetailResponse extends Equatable {
     map['episode_run_time'] = episodeRunTime;
     map['first_air_date'] = firstAirDate;
     map['genres'] = genres.map((v) => v.toJson()).toList();
-      map['homepage'] = homepage;
+    map['homepage'] = homepage;
     map['id'] = id;
     map['in_production'] = inProduction;
     map['languages'] = languages;
@@ -205,21 +228,21 @@ class TVSeriesDetailResponse extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        originalName,
-        backdropPath,
-        genres,
-        originCountry,
-        firstAirDate,
-        originalLanguage,
-        originalName,
-        popularity,
-        overview,
-        posterPath,
-        voteAverage,
-        voteCount,
-      ];
+    id,
+    name,
+    originalName,
+    backdropPath,
+    genres,
+    originCountry,
+    firstAirDate,
+    originalLanguage,
+    originalName,
+    popularity,
+    overview,
+    posterPath,
+    voteAverage,
+    voteCount,
+  ];
 }
 
 class SpokenLanguages {
@@ -230,10 +253,10 @@ class SpokenLanguages {
   SpokenLanguages({this.englishName, this.iso6391, this.name});
 
   factory SpokenLanguages.fromJson(dynamic json) => SpokenLanguages(
-        englishName: json['english_name'],
-        iso6391: json['iso_639_1'],
-        name: json['name'],
-      );
+    englishName: json['english_name'],
+    iso6391: json['iso_639_1'],
+    name: json['name'],
+  );
 
   Map<String, dynamic> toJson() {
     var map = <String, dynamic>{};
@@ -253,14 +276,15 @@ class Seasons {
   String? posterPath;
   int? seasonNumber;
 
-  Seasons(
-      {this.airDate,
-      this.episodeCount,
-      this.id,
-      this.name,
-      this.overview,
-      this.posterPath,
-      this.seasonNumber});
+  Seasons({
+    this.airDate,
+    this.episodeCount,
+    this.id,
+    this.name,
+    this.overview,
+    this.posterPath,
+    this.seasonNumber,
+  });
 
   Seasons.fromJson(dynamic json) {
     airDate = json['air_date'];
@@ -366,17 +390,18 @@ class NextEpisodeToAir {
   double? voteAverage;
   int? voteCount;
 
-  NextEpisodeToAir(
-      {this.airDate,
-      this.episodeNumber,
-      this.id,
-      this.name,
-      this.overview,
-      this.productionCode,
-      this.seasonNumber,
-      this.stillPath,
-      this.voteAverage,
-      this.voteCount});
+  NextEpisodeToAir({
+    this.airDate,
+    this.episodeNumber,
+    this.id,
+    this.name,
+    this.overview,
+    this.productionCode,
+    this.seasonNumber,
+    this.stillPath,
+    this.voteAverage,
+    this.voteCount,
+  });
 
   NextEpisodeToAir.fromJson(dynamic json) {
     airDate = json['air_date'];
@@ -419,17 +444,18 @@ class LastEpisodeToAir {
   double? voteAverage;
   int? voteCount;
 
-  LastEpisodeToAir(
-      {this.airDate,
-      this.episodeNumber,
-      this.id,
-      this.name,
-      this.overview,
-      this.productionCode,
-      this.seasonNumber,
-      this.stillPath,
-      this.voteAverage,
-      this.voteCount});
+  LastEpisodeToAir({
+    this.airDate,
+    this.episodeNumber,
+    this.id,
+    this.name,
+    this.overview,
+    this.productionCode,
+    this.seasonNumber,
+    this.stillPath,
+    this.voteAverage,
+    this.voteCount,
+  });
 
   LastEpisodeToAir.fromJson(dynamic json) {
     airDate = json['air_date'];

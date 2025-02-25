@@ -61,7 +61,7 @@ class _SearchTvSeriesPageState extends State<SearchTvSeriesPage> {
                       ),
                     );
                   } else {
-                    return SizedBox.expand();
+                    return const SizedBox();
                   }
                 },
               ),

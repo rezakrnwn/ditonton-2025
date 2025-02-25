@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:ditonton/common/utils.dart';
 import 'package:ditonton/domain/entities/genre.dart';
 import 'package:ditonton/domain/entities/tv_series.dart';
 import 'package:ditonton/domain/entities/tv_series_detail.dart';
@@ -55,7 +56,7 @@ class TvSeriesDetailBloc
             (r) => emit(
               currentState.copyWith(
                 tvSeriesDetail: tvSeriesDetail,
-                genres: _toGenresString(tvSeriesDetail?.genres ?? []),
+                genres: toGenresString(tvSeriesDetail?.genres ?? []),
               ),
             ),
           );
@@ -157,18 +158,5 @@ class TvSeriesDetailBloc
         }
       },
     );
-  }
-
-  String _toGenresString(List<Genre> genres) {
-    String result = '';
-    for (var genre in genres) {
-      result += genre.name + ', ';
-    }
-
-    if (result.isEmpty) {
-      return result;
-    }
-
-    return result.substring(0, result.length - 2);
   }
 }

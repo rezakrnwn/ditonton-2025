@@ -61,7 +61,7 @@ class _SearchMoviePageState extends State<SearchMoviePage> {
                       ),
                     );
                   } else {
-                    return SizedBox.expand();
+                    return const SizedBox();
                   }
                 },
               ),

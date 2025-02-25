@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:ditonton/common/utils.dart';
 import 'package:ditonton/domain/entities/genre.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/entities/movie_detail.dart';
@@ -55,8 +56,8 @@ class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieDetailState> {
             (r) => emit(
               currentState.copyWith(
                 movieDetail: movieDetail,
-                genres: _toGenresString(movieDetail?.genres ?? []),
-                duration: _formatDuration(movieDetail?.runtime ?? 0),
+                genres: toGenresString(movieDetail?.genres ?? []),
+                duration: formatDuration(movieDetail?.runtime ?? 0),
               ),
             ),
           );
@@ -159,29 +160,5 @@ class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieDetailState> {
         }
       },
     );
-  }
-
-  String _toGenresString(List<Genre> genres) {
-    String result = '';
-    for (var genre in genres) {
-      result += genre.name + ', ';
-    }
-
-    if (result.isEmpty) {
-      return result;
-    }
-
-    return result.substring(0, result.length - 2);
-  }
-
-  String _formatDuration(int runtime) {
-    final int hours = runtime ~/ 60;
-    final int minutes = runtime % 60;
-
-    if (hours > 0) {
-      return '${hours}h ${minutes}m';
-    } else {
-      return '${minutes}m';
-    }
   }
 }

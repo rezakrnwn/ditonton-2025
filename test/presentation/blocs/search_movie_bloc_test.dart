@@ -40,6 +40,24 @@ void main() {
       });
 
   blocTest<SearchMovieBloc, SearchMovieState>(
+      'should emit [SearchMovieLoadingState, SearchResultMovieLoadedState] with empty result when data is gotten successfully',
+      build: () {
+        when(mockSearchMovies.execute(keyword))
+            .thenAnswer((_) async => Right([]));
+        return bloc;
+      },
+      act: (bloc) => bloc.add(LoadSearchResultMovieEvent(keyword: keyword)),
+      expect: () => [
+            SearchMovieLoadingState(),
+            SearchResultMovieLoadedState(
+              movies: [],
+            ),
+          ],
+      verify: (bloc) {
+        verify(mockSearchMovies.execute(keyword));
+      });
+
+  blocTest<SearchMovieBloc, SearchMovieState>(
       "should emit [SearchMovieLoadingState, LoadSearchMovieFailureState] when get data is unsuccessful",
       build: () {
         when(mockSearchMovies.execute(keyword))

@@ -123,6 +123,68 @@ void main() {
   );
 
   blocTest<MovieDetailBloc, MovieDetailState>(
+    "should emit MovieDetailLoadedState with movieRecommendationsErrorMessage when data movie recommendation is gotten unsuccessfully",
+    build: () {
+      when(
+        mockGetMovieDetail.execute(tId),
+      ).thenAnswer((_) async => Right(testMovieDetail));
+      when(mockGetWatchlistStatus.execute(tId)).thenAnswer((_) async => true);
+      when(
+        mockGetMovieRecommendations.execute(tId),
+      ).thenAnswer((_) async => Left(ServerFailure("Failed")));
+      return bloc;
+    },
+    act: (bloc) => bloc.add(LoadMovieDetailEvent(id: tId)),
+    expect:
+        () => [
+          MovieDetailLoadedState(movieDetail: testMovieDetail),
+          MovieDetailLoadedState(
+            movieDetail: testMovieDetail,
+            isAddedToWatchlist: true,
+          ),
+          MovieDetailLoadedState(
+            movieDetail: testMovieDetail,
+            isAddedToWatchlist: true,
+            movieRecommendationsErrorMessage: "Failed",
+          ),
+        ],
+    verify: (bloc) {
+      verify(mockGetMovieDetail.execute(tId));
+      verify(mockGetWatchlistStatus.execute(tId));
+      verify(mockGetMovieRecommendations.execute(tId));
+    },
+  );
+
+  blocTest<MovieDetailBloc, MovieDetailState>(
+    "should emit MovieDetailLoadedState with isAddedToWatchlist = false when detail movie is not listed on wishlist",
+    build: () {
+      when(
+        mockGetMovieDetail.execute(tId),
+      ).thenAnswer((_) async => Right(testMovieDetail));
+      when(mockGetWatchlistStatus.execute(tId)).thenAnswer((_) async => false);
+      when(
+        mockGetMovieRecommendations.execute(tId),
+      ).thenAnswer((_) async => Right(tMovies));
+      return bloc;
+    },
+    act: (bloc) => bloc.add(LoadMovieDetailEvent(id: tId)),
+    expect:
+        () => [
+          MovieDetailLoadedState(movieDetail: testMovieDetail),
+          MovieDetailLoadedState(
+            movieDetail: testMovieDetail,
+            isAddedToWatchlist: false,
+            movieRecommendations: tMovies,
+          ),
+        ],
+    verify: (bloc) {
+      verify(mockGetMovieDetail.execute(tId));
+      verify(mockGetWatchlistStatus.execute(tId));
+      verify(mockGetMovieRecommendations.execute(tId));
+    },
+  );
+
+  blocTest<MovieDetailBloc, MovieDetailState>(
     "should emit MovieDetailLoadedState(isAddedToWatchlist: true, watchlistSuccessMessage: 'Added to Watchlist') when data is added to wishlist",
     build: () {
       when(
@@ -146,6 +208,29 @@ void main() {
   );
 
   blocTest<MovieDetailBloc, MovieDetailState>(
+    "should emit MovieDetailLoadedState with watchlistErrorMessage when add data to wishlist is unsuccessfully",
+    build: () {
+      when(
+        mockSaveWatchlist.execute(testMovieDetail),
+      ).thenAnswer((_) async => Left(DatabaseFailure("Failed")));
+
+      bloc.emit(MovieDetailLoadedState(isAddedToWatchlist: false));
+      return bloc;
+    },
+    act: (bloc) => bloc.add(AddMovieWatchlistEvent(movie: testMovieDetail)),
+    expect:
+        () => [
+          MovieDetailLoadedState(
+            isAddedToWatchlist: false,
+            watchlistErrorMessage: "Failed"
+          ),
+        ],
+    verify: (bloc) {
+      verify(mockSaveWatchlist.execute(testMovieDetail));
+    },
+  );
+
+  blocTest<MovieDetailBloc, MovieDetailState>(
     "should emit MovieDetailLoadedState(isAddedToWatchlist: false, watchlistSuccessMessage: 'Removed from Watchlist') when data is removed from wishlist",
     build: () {
       when(
@@ -161,6 +246,33 @@ void main() {
           MovieDetailLoadedState(
             isAddedToWatchlist: false,
             watchlistSuccessMessage: "Removed from Watchlist",
+          ),
+        ],
+    verify: (bloc) {
+      verify(mockRemoveWatchlist.execute(testMovieDetail));
+    },
+  );
+
+  blocTest<MovieDetailBloc, MovieDetailState>(
+    "should emit MovieDetailLoadedState with watchlistErrorMessage when remove data from wishlist is unsuccessfully",
+    build: () {
+      when(
+        mockRemoveWatchlist.execute(testMovieDetail),
+      ).thenAnswer((_) async => Left(DatabaseFailure("Failed")));
+
+      bloc.emit(MovieDetailLoadedState(isAddedToWatchlist: true));
+      return bloc;
+    },
+    act: (bloc) => bloc.add(RemoveMovieWatchlistEvent(movie: testMovieDetail)),
+    expect:
+        () => [
+          MovieDetailLoadedState(
+            isAddedToWatchlist: true,
+            watchlistErrorMessage: "Failed"
+          ),
+          MovieDetailLoadedState(
+            isAddedToWatchlist: true,
+            watchlistErrorMessage: ""
           ),
         ],
     verify: (bloc) {
